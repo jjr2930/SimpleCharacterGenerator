@@ -63,11 +63,7 @@ PrefabInstance:
     - target: {fileID: 3094101975524841333, guid: 62f4346bc2c1fbc408c8a7732ffc5ff3, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1eca3fd86d72b3343b615dd645a1d915, type: 2}
-    - target: {fileID: 3094101975524841333, guid: 62f4346bc2c1fbc408c8a7732ffc5ff3, type: 3}
-      propertyPath: m_BlendShapeWeights.Array.size
-      value: 20
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2100000, guid: e5a372a59b9912b4292cd6018068edc7, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
