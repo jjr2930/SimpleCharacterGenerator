@@ -2,24 +2,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 public class ShapeSetter : MonoBehaviour
 {
+    public const int SHAPE_PROPERTY_COUNT = 20;
     [SerializeField] MinMaxFloat bodyShapeMinMax = new MinMaxFloat(-500 , 500);
     [SerializeField] MinMaxFloat expressionMinMax = new MinMaxFloat(-200 , 200);
     [SerializeField] new SkinnedMeshRenderer renderer = null;
 
-    public void Awake()
-    {
-        var blendShapeCount = renderer.sharedMesh.blendShapeCount;
-        //print blendshpae parameter key name
-        for (int i = 0; i < blendShapeCount; i++)
-        {
-            print(renderer.sharedMesh.GetBlendShapeName(i));
-        }
-    }
+    //public void Awake()
+    //{
+    //    var blendShapeCount = renderer.sharedMesh.blendShapeCount;
+    //    //print blendshpae parameter key name
+    //    for (int i = 0; i < blendShapeCount; i++)
+    //    {
+    //        print(renderer.sharedMesh.GetBlendShapeName(i));
+    //    }
+    //}
 
     /// <summary>
     /// 0~10 -> shape 000 ~ shape 009, 11~10 -> Exp000 ~ Exp009
@@ -36,6 +39,22 @@ public class ShapeSetter : MonoBehaviour
             var value = values[i];
             renderer.SetBlendShapeWeight(i, value);
         }
+    }
+
+    public void SetTexture(string texturePath)
+    {
+        //load texture2d
+        if (false == File.Exists(texturePath))
+        {
+            Debug.LogError("Texture file not found: " + texturePath);
+            return;
+        }
+
+        Texture2D texture = new Texture2D(2, 2);
+        texture.LoadImage(System.IO.File.ReadAllBytes(texturePath));
+        texture.name = Path.GetFileNameWithoutExtension(texturePath);
+
+        renderer.material.SetTexture("_MainTex", texture);
     }
 
 #if UNITY_EDITOR
