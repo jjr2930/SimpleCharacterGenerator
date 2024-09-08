@@ -17,7 +17,7 @@ public class Response
     public string gender;
     public float[] shapes;
     public string texturePath;
-    public string outputDir;
+    public string outputDirectory;
 }
 
 public class AppController : MonoBehaviour
@@ -83,15 +83,20 @@ public class AppController : MonoBehaviour
                     {
                         var img = imgs[i];
                         var bytes = img.EncodeToPNG();
-                        var path = Path.Combine(response.outputDir, $"{(CameraController.LocationNames)i}.png");
+                        var path = Path.Combine(response.outputDirectory, $"{(CameraController.LocationNames)i}.png");
 
-                        if(!Directory.Exists(response.outputDir))
-                            Directory.CreateDirectory(response.outputDir);
+                        if(!Directory.Exists(response.outputDirectory))
+                            Directory.CreateDirectory(response.outputDirectory);
 
                         File.WriteAllBytes(path, bytes);
                     }
                 }
                 ListPool<Texture2D>.Release(imgs);
+                byte[] encodedBytes = Encoding.UTF8.GetBytes("good");
+
+                context.Response.ContentType = "application/json";
+                context.Response.OutputStream.Write(encodedBytes, 0, encodedBytes.Length);
+                context.Response.OutputStream.Close();
 
                 context.Response.Close();
             }
