@@ -1,11 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -59,7 +56,7 @@ public class AppController : MonoBehaviour
             {
                 var operation = httpListener.GetContextAsync();
 
-                yield return new WaitUntil(() => operation.IsCompleted );
+                yield return new WaitUntil(() => operation.IsCompleted);
 
                 var context = operation.Result;
                 var bodyStream = context.Request.InputStream;
@@ -69,7 +66,10 @@ public class AppController : MonoBehaviour
                 string body = reader.ReadToEnd();
 
                 var response = JsonUtility.FromJson<Response>(body);
+                if(response.gender != "male")
+                {
 
+                }
                 modelGenerator.SetGender(response.gender);
                 modelGenerator.SetShape(response.shapes);
                 modelGenerator.SetTexture(response.texturePath);
@@ -85,21 +85,25 @@ public class AppController : MonoBehaviour
                         var bytes = img.EncodeToPNG();
                         var path = Path.Combine(response.outputDirectory, $"{(CameraController.LocationNames)i}.png");
 
-                        if(!Directory.Exists(response.outputDirectory))
+                        if (!Directory.Exists(response.outputDirectory))
                             Directory.CreateDirectory(response.outputDirectory);
 
                         File.WriteAllBytes(path, bytes);
                     }
                 }
                 ListPool<Texture2D>.Release(imgs);
-                byte[] encodedBytes = Encoding.UTF8.GetBytes("good");
-
-                context.Response.ContentType = "application/json";
-                context.Response.OutputStream.Write(encodedBytes, 0, encodedBytes.Length);
-                context.Response.OutputStream.Close();
-
+                SendToClient(context,"good");
                 context.Response.Close();
             }
         }
+    }
+
+    private static void SendToClient(HttpListenerContext context, string message)
+    {
+        byte[] encodedBytes = Encoding.UTF8.GetBytes(message);
+
+        context.Response.ContentType = "application/json";
+        context.Response.OutputStream.Write(encodedBytes, 0, encodedBytes.Length);
+        context.Response.OutputStream.Close();
     }
 }
