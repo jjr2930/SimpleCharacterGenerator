@@ -5,8 +5,11 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Main.unity
     guid: eb173dd71d9663b429875ad89ac2fd2a
+  - enabled: 1
+    path: Assets/Scenes/PatternViewer.unity
+    guid: 151c518cbee6f42f08ee3209cae23d2d
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

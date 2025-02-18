@@ -1,13 +1,24 @@
+using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class PatternGeneratorTester : MonoBehaviour
 {
-    [SerializeField]    TextAsset patterFile;
     [SerializeField] Material material;
+    [SerializeField] CinemachineTargetGroup targetGroup;
 
-    public void Start()
+    List<GameObject> patternMeshs = new List<GameObject>();
+    public void OnClicked(TextAsset patternFile)
     {
-        var pattern = PatternReader.ReadPatternWithJson(patterFile.text);
+        foreach (var patternMesh in patternMeshs)
+        {
+            targetGroup.RemoveMember(patternMesh.transform);
+            Destroy(patternMesh);
+        }
+
+        patternMeshs.Clear();
+
+        var pattern = PatternReader.ReadPatternWithJson(patternFile.text);
 
         var patternByName = PatternGenerator.GenerateMeshs(pattern);
         foreach (var patternMesh in patternByName)
@@ -33,6 +44,11 @@ public class PatternGeneratorTester : MonoBehaviour
 
             mGo.transform.position = position;
             mGo.transform.rotation = Quaternion.Euler(eulerRotation);
+            mGo.layer = LayerMask.NameToLayer("Pattern");
+
+            targetGroup.AddMember(mGo.transform, 1, 1);
+
+            patternMeshs.Add(mGo);
         }
 
         // var pointsByName = PatternGenerator.GeneratePoints(pattern);
